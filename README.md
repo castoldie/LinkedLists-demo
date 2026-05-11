@@ -1,34 +1,60 @@
-# Linked Lists
+# LinkedLists-demo
 
-This code implements a linked list data structure using two classes: Node and LinkedList.
+A minimal, dependency-free Python implementation of a singly linked list. Educational/demo code — no build system, no tests, just one file: `llists.py`.
 
-## Node Class
+## What's in `llists.py`
 
-The Node class has two main properties:
+Two classes:
 
-- value: This represents the data stored in a node
-- next_node: This is a reference to the next node in the linked list
+### `Node`
 
-### It has four methods:
+Holds a `value` and a `next_node` reference. Exposes getters/setter for both fields.
 
-- `__init__(self, value, next_node=None)`: Initializes the Node class with a value and a reference to the next node (which is set to None by default indicating the end of the list)
-- `get_value(self)`: Returns the value of the node
-- `get_next_node(self)`: Returns the reference to the next node
-- `set_next_node(self, next_node)`: Updates the reference to the next node
+| Method | Purpose |
+|--------|---------|
+| `__init__(value, next_node=None)` | Initialize with a value and (optionally) a next-node reference |
+| `get_value()` | Return the node's value |
+| `get_next_node()` | Return the next-node reference |
+| `set_next_node(next_node)` | Update the next-node reference |
 
-## LinkedList Class
+### `LinkedList`
 
-### The LinkedList class has a single property:
+Wraps a `head_node`. Supported operations:
 
-head_node: This is a reference to the first node in the linked list
+| Method | Description | Complexity |
+|--------|-------------|------------|
+| `__init__(value=None)` | Initialize with an optional head value | O(1) |
+| `get_head_node()` | Return the head-node reference | O(1) |
+| `insert_beginning(new_value)` | Prepend a new value to the list | O(1) |
+| `remove_node(value_to_remove)` | Linear scan, unlink first match by value | O(n) |
+| `stringify_list()` | Walk the list and join values with newlines (skips `None`) | O(n) |
 
-### It has six methods:
+## Running
 
-- `__init__(self, value=None)`: Initializes the LinkedList class with an optional value to set as the head node
-- `get_head_node(self)`: Returns the reference to the head node
-- `insert_beginning(self, new_value)`: Adds a new Node(new_value) to the beginning of the linked list
-- `stringify_list(self)`: Converts the linked list into a string representation
-- `remove_node(self, value_to_remove)`: Removes a node with a specified value from the linked list
+```bash
+python3 llists.py
+```
 
-## Use Case
-A linked list can be used to store a collection of data where each element is connected to the next. For example, consider a to-do list application where a linked list can be used to store tasks. Each task can be stored as a node in the linked list and linked to the next task. The insert_beginning method can be used to add a new task to the beginning of the list. The stringify_list method can be used to display the list of tasks. The remove_node method can be used to remove a completed task from the list.
+Or import interactively:
+
+```python
+from llists import LinkedList
+
+ll = LinkedList()
+ll.insert_beginning("apple")
+ll.insert_beginning("banana")
+print(ll.stringify_list())
+```
+
+## Use case
+
+A linked list is useful when you want O(1) prepend without resizing an underlying array. The classic illustrative example is a to-do list: each task is a node, new tasks are added with `insert_beginning`, and completed tasks are removed with `remove_node`.
+
+## Known quirks
+
+- `LinkedList()` constructed with no argument creates a `Node(None)` head — so an "empty" list actually contains one sentinel node. `stringify_list()` silently skips `None` values so this is invisible from the outside.
+- `remove_node(value)` does **not** gracefully handle the case where `value` is not present in the list — it walks until `current_node` is `None` and then calls `.get_value()` on it, raising `AttributeError`. Same problem with duplicates: only the first match is removed.
+
+## Status
+
+Demo / learning code. Not production-ready.
